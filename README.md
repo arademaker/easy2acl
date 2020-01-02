@@ -7,7 +7,7 @@ Please report bugs and suggest improvements.
 
 ## Prerequisites
 
-The Python 3 `unicode_tex` package is needed and can be installed using pip (`pip3 -r requirements.txt`).
+The Python 3 `unicode_tex` package is needed and can be installed using pip (`pip3 install -r requirements.txt`).
 The tar command is also needed (and should be available at PATH).
 
 ## How to run

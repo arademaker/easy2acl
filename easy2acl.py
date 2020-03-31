@@ -42,16 +42,14 @@ with open('meta') as metadata_file:
         else:
             metadata[key] = value
 
-for key in 'abbrev title booktitle month year location publisher chairs bib_url'.split():
+for key in 'abbrev volume_name title short_booktitle booktitle month year location publisher chairs'.split():
     if key not in metadata:
         print('Fatal: missing key "{}" from "meta" file'.format(key))
         sys.exit(1)
 
-match = re.match(r'https://www.aclweb.org/anthology/([A-Z])(\d\d)-(\d+)%0(\d+)d', metadata['bib_url'])
-if match is None:
-    print("Fatal: bib_url field ({}) in 'meta' file has wrong pattern".format(metadata['bib_url']), file=sys.stderr)
-    sys.exit(1)
-anthology_collection, anthology_year, anthology_volume, anthology_paper_width = match.groups()
+venue = metadata["abbrev"]
+volume_name = metadata["volume_name"]
+year = metadata["year"]
 
 #
 # Build a dictionary of submissions (which has author information).
@@ -103,22 +101,20 @@ else:
 #
 
 # The PDF of the full proceedings
-full_pdf_file = 'pdf/{abbrev}_{year}.pdf'.format(abbrev=metadata['abbrev'],
-                                                 year=metadata['year'])
+full_pdf_file = 'pdf/{venue}_{year}.pdf'.format(venue, year)
 if not os.path.exists(full_pdf_file):
     print("Fatal: could not find full volume PDF '{}'".format(full_pdf_file))
     sys.exit(1)
 
 # The PDF of the frontmatter
-frontmatter_pdf_file = 'pdf/{abbrev}_{year}_frontmatter.pdf'.format(abbrev=metadata['abbrev'],
-                                                                    year=metadata['year'])
+frontmatter_pdf_file = 'pdf/{venue}_{year}_frontmatter.pdf'.format(venue, year)
 if not os.path.exists(frontmatter_pdf_file):
     print("Fatal: could not find frontmatter PDF file '{}'".format(frontmatter_pdf_file))
     sys.exit(1)
 
 # File locations of all PDFs (seeded with PDF for frontmatter)
 pdfs = { '0': frontmatter_pdf_file }
-for pdf_file in glob('pdf/{abbrev}_{year}_paper_*.pdf'.format(abbrev=metadata['abbrev'], year=metadata['year'])):
+for pdf_file in glob('pdf/{venue}_{year}_paper_*.pdf'.format(venue, year)):
     submission_id = pdf_file.split('_')[-1].replace('.pdf', '')
     pdfs[submission_id] = pdf_file
 
@@ -149,8 +145,7 @@ for paper_id, entry in enumerate(accepted):
         sys.exit(1)
 
     pdf_path = pdfs[submission_id]
-    formatted_id = '{paper_id:0{width}d}'.format(paper_id=paper_id, width=anthology_paper_width)
-    dest_path = 'proceedings/cdrom/pdf/{letter}{year}-{workshop_id}{paper_id}.pdf'.format(letter=anthology_collection, year=anthology_year, workshop_id=anthology_volume, paper_id=formatted_id)
+    dest_path = 'proceedings/cdrom/pdf/{year}.{venue}-{volume_name}.{paper_id}.pdf'.format(year, venue, volume_name, paper_id)
 
     copy(pdf_path, dest_path)
     print('COPYING', pdf_path, '->', dest_path, file=sys.stderr)
@@ -216,8 +211,7 @@ with open('book-proceedings/all_papers.tex', 'w') as book_file:
 
 
 # Write the volume-level bib with all the entries
-dest_bib = 'proceedings/cdrom/{abbrev}-{year}.bib'.format(abbrev=metadata['abbrev'],
-                                                          year=metadata['year'])
+dest_bib = 'proceedings/cdrom/{venue}-{year}.bib'.format(venue, year)
 with open(dest_bib, 'w') as whole_bib:
     print('\n'.join(final_bibs), file=whole_bib)
     print('CREATED', dest_bib)

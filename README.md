@@ -29,7 +29,8 @@ Before running `easy2acl.py`, your file structure should look like this:
 
 (where ${abbrev} and ${year} are defined in the `meta` file, see below)
 
-When you run the script for the first time, create a dummy pdf file for the full volume consolidated PDF file and the front matter proceedings file using the above file naming convention. We will replace the dummy files later and repeat the procedure.
+When you run the script for the first time, create a dummy pdf file for the full volume consolidated PDF file and the front matter proceedings file using the above file naming convention.
+We will replace the dummy files later and repeat the procedure.
 
 Run the script:
 
@@ -37,23 +38,30 @@ Run the script:
 
 When the script has finished, you will see the following additional files in the `proceedings` folder.
 
-    |-- cdrom/
-        |-- ${abbrev}-${year}.bib     # all bib entries
-        |-- ${abbrev}-${year}.pdf     # entire volume
-        |-- bib/
-        |   |-- W19-1000.bib          # frontmatter
-        |   |-- W19-1001.bib
-        |   |-- W19-1002.bib
-        |   `-- ...
-        `-- pdf/
-            |-- W19-1000.pdf          # frontmatter
-            |-- W19-1001.pdf
-            |-- W19-1002.pdf
-            `-- ...
+    |-- proceedings/
+        `-- cdrom/
+            |-- ${abbrev}-${year}.bib     # all bib entries
+            |-- ${abbrev}-${year}.pdf     # entire volume
+            |-- bib/
+            |   |-- {year}.{abbrev}-{volume_name}.0.bib  # frontmatter
+            |   |-- {year}.{abbrev}-{volume_name}.1.bib  # first paper
+            |   |-- {year}.{abbrev}-{volume_name}.2.bib  # second paper
+            |   `-- ...
+            `-- pdf/
+                |-- {year}.{abbrev}-{volume_name}.0.pdf  # frontmatter
+                |-- {year}.{abbrev}-{volume_name}.1.pdf  # first paper
+                |-- {year}.{abbrev}-{volume_name}.2.pdf  # second paper
+                `-- ...
 
 This is the input format that [the ingestion scripts for the ACL Anthology](https://github.com/acl-org/ACLPUB) expect.
 
-The `easyacl.py` script also creates a file `book-proceedings/all_papers.tex` which contains an index of files that is read in automatically by `book-proceedings.tex`. This document can be used to generate a full volume consolidated PDF file. This file contains front matter (which you should edit), and automatically creates a table of contents and includes all papers from `all_papers.tex`. To create the book proceedings simply edit the front matter and recompile `book_proceedings.tex`. Copy `book-proceedings.pdf` to `${abbrev}_${year}_frontmatter.pdf` in your `pdf` folder. To create `${abbrev}_${year}_frontmatter.pdf` extract the front matter pages with roman page numbers from `book-proceedings.pdf`. Finally, re-run `python3 easy2acl.py` to replace the dummy full book proceedings and front matter files in the `proceedings` folder that you will use in the next step.
+The `easyacl.py` script also creates a file `book-proceedings/all_papers.tex` which contains an index of files that is read in automatically by `book-proceedings.tex`.
+This document can be used to generate a full volume consolidated PDF file.
+This file contains front matter (which you should edit), and automatically creates a table of contents and includes all papers from `all_papers.tex`.
+To create the book proceedings simply edit the front matter and recompile `book_proceedings.tex`.
+Copy `book-proceedings.pdf` to `${abbrev}_${year}_frontmatter.pdf` in your `pdf` folder.
+To create `${abbrev}_${year}_frontmatter.pdf` extract the front matter pages with roman page numbers from `book-proceedings.pdf`.
+Finally, re-run `python3 easy2acl.py` to replace the dummy full book proceedings and front matter files in the `proceedings` folder that you will use in the next step.
 
 Once this data is generated, you can proceed with ACLPUB to generate the XML ingestion file and layout that the Anthology requires.
 
@@ -82,6 +90,13 @@ Start by downloading the actual submissions: In EasyChair, go to the page _Submi
 
 The `meta` file defines a number of conference-level values that are needed to generate the BibTeX and to interpret the file names.
 The script will complain if you are missing fields.
+Fields of particular importance are:
+
+- `year`, `abbrev`, and `volume_name`: These will be used to form the anthology identifier for your conference, which has the format of "{year}.{abbrev}-{volume_name}.{paper_number}".
+  If you don't know what volume name to use, or have only one volume, a good default is just to number it "1".
+- `booktitle`: This is the long, fully expanded book title for the proceedings.
+- `short_booktitle`: This is a shorter proceedings name, which may someday be used to produce shorter citations.
+
 An example file can be found [here](example-files/meta).
 
 ### Information about all submissions

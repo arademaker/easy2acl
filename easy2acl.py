@@ -158,7 +158,7 @@ for paper_id, entry in enumerate(accepted):
 
     bib_type = 'inproceedings' if submission_id != '0' else 'proceedings'
     bib_entry = Entry(bib_type, [
-        ('author', texify(authors)),
+        ('author', authors),
         ('title', paper_title),
         ('year', metadata['year']),
         ('month', metadata['month']),

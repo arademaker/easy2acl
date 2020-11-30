@@ -43,14 +43,14 @@ When the script has finished, you will see the following additional files in the
             |-- ${abbrev}-${year}.bib     # all bib entries
             |-- ${abbrev}-${year}.pdf     # entire volume
             |-- bib/
-            |   |-- {year}.{abbrev}-{volume_name}.0.bib  # frontmatter
-            |   |-- {year}.{abbrev}-{volume_name}.1.bib  # first paper
-            |   |-- {year}.{abbrev}-{volume_name}.2.bib  # second paper
+            |   |-- {year}.{abbrev}-{volume}.0.bib  # frontmatter
+            |   |-- {year}.{abbrev}-{volume}.1.bib  # first paper
+            |   |-- {year}.{abbrev}-{volume}.2.bib  # second paper
             |   `-- ...
             `-- pdf/
-                |-- {year}.{abbrev}-{volume_name}.0.pdf  # frontmatter
-                |-- {year}.{abbrev}-{volume_name}.1.pdf  # first paper
-                |-- {year}.{abbrev}-{volume_name}.2.pdf  # second paper
+                |-- {year}.{abbrev}-{volume}.0.pdf  # frontmatter
+                |-- {year}.{abbrev}-{volume}.1.pdf  # first paper
+                |-- {year}.{abbrev}-{volume}.2.pdf  # second paper
                 `-- ...
 
 This is the input format that [the ingestion scripts for the ACL Anthology](https://github.com/acl-org/ACLPUB) expect.
@@ -89,13 +89,7 @@ Start by downloading the actual submissions: In EasyChair, go to the page _Submi
 ### The metadata file
 
 The `meta` file defines a number of conference-level values that are needed to generate the BibTeX and to interpret the file names.
-The script will complain if you are missing fields.
-Fields of particular importance are:
-
-- `year`, `abbrev`, and `volume_name`: These will be used to form the anthology identifier for your conference, which has the format of "{year}.{abbrev}-{volume_name}.{paper_number}".
-  If you don't know what volume name to use, or have only one volume, a good default is just to number it "1".
-- `booktitle`: This is the long, fully expanded book title for the proceedings.
-- `short_booktitle`: This is a shorter proceedings name, which may someday be used to produce shorter citations.
+Information on the layout and format of this file can be found on [this page in the ACLPUB documentation](https://acl-org.github.io/ACLPUB/anthology.html#the-meta-file).
 
 An example file can be found [here](example-files/meta).
 
